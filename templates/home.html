@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homepage</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./test.css">
+    <style>
+        .center {
+    margin: auto;
+    text-align: center;
+    width: 50%;
+    padding: 10px;
+    }
+    </style>
+    </head>
+    <body>
+
+        <div class="center">
+            <h2 class ="heading"><b>Home</b></h2>
+     
+          <a href="{{ url_for('homepage') }}">Home</a>
+          <a href="{{ url_for('tweetsPage') }}">Tweets</a>
+          <a href="{{ url_for('registerPage') }}">Register</a>
+          <a href="{{ url_for('loginPage') }}">Login</a>
+          <a href="{{ url_for('profilePage') }}">Profile</a>
+
+        
+        </div>
+        
+
+
+
+  
+   
+    </body>
+</html>

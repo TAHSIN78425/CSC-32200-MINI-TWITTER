@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homepage</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        .center {
+    margin: auto;
+    text-align: center;
+    width: 50%;
+    padding: 10px;
+    }
+    
+.box {
+  width: 400px;
+  height: 100px;
+  border: 3px solid black;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.comma-list {
+            display: inline;
+            list-style: none;
+            padding: 0px
+        }
+
+        .comma-list li {
+            display: inline;
+            font-weight: bold;
+        }
+
+        .comma-list li::after {
+            content: "/";
+        }
+
+        .comma-list li:last-child::after {
+            content: "";
+        }
+
+    </style>
+    </head>
+    <body>
+        <div class="center">
+        <h2>Mini Twitter</h2>
+        <a href="{{ url_for('homepage') }}">Home</a>
+        <a href="{{ url_for('tweetsPage') }}">Tweets</a>
+          <a href="{{ url_for('registerPage') }}">Register</a>
+          <a href="{{ url_for('loginPage') }}">Login</a>
+          <a href="{{ url_for('profilePage') }}">Profile</a>
+
+        {% for each in db_tweets %}
+        <h3> {{each[1]}}</h3>
+        {{each[0]}}
+        <br>Likes: {{each[2]}}
+        <br>Dislikes: {{each[3]}}
+
+        {% endfor %}
+   
+    </div>
+        <div class="center">
+        <form method = "POST">
+        <label for="message">Add Tweet</label>
+            <input name = "message"><br><br>
+            <input type = "submit"><br><br>
+
+        </form>
+        </div>
+    </body>
+</html>
