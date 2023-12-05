@@ -1,75 +1,116 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
-# Step 1: System Architecture and User Management
-
 class User:
-    def __init__(self, user_id, user_type):
+    """
+    A base class to represent a generic user in the system.
+    """
+    def __init__(self, user_id, username):
         self.user_id = user_id
-        self.user_type = user_type
-        self.warnings = 0
-
-class SuperUser(User):
-    def process_application(self, applicant, decision):
-        if decision == 'accept':
-            # Send temporary password
-            print(f"Temporary password sent to {applicant.user_id}")
-            # Deposit money to the system
-            # ...
-
-# Message Structure
-class Message:
-    def __init__(self, author, timestamp, keywords, content):
-        self.author = author
-        self.timestamp = timestamp
-        self.keywords = keywords
-        self.content = content
-        self.read_count = 0
+        self.username = username
+        self.balance = 0
+        self.reads = 0
         self.likes = 0
         self.dislikes = 0
         self.complaints = 0
+        self.warnings = 0
+        self.is_active = True
 
-# Step 2: Messaging and Interaction Features
+    def update_balance(self, amount):
+        """
+        Updates the user's balance, adding or subtracting the specified amount.
+        """
+        self.balance += amount
 
-class TrendyUser(User):
-    def suggest_accounts_to_follow(self):
-        # Implement logic to suggest accounts based on user's history
-        # ...
+    def update_activity(self, reads, likes, dislikes, complaints):
+        """
+        Updates the user's activity stats.
+        """
+        self.reads += reads
+        self.likes += likes
+        self.dislikes += dislikes
+        self.complaints += complaints
 
-# Step 3: Additional Features and GUI
+    def check_warnings(self):
+        """
+        Checks if warnings exceed a certain threshold.
+        """
+        return self.warnings >= 3
 
-# GUI Development - Simplified Console Interface
-class GUI:
-    
-    def display_top_page(self, top_messages, top_trendy_users):
-        # Display top messages and trendy users on the top page
-        print("Top Messages:")
-        for message in top_messages:
-            print(message)
-        print("\nTop Trendy Users:")
-        for user in top_trendy_users:
-            print(user)
-
-# Instantiate Users
-super_user = SuperUser("su001", "SU")
-ordinary_user = User("ou001", "OU")
-trendy_user = TrendyUser("tu001", "TU")
-
-# Instantiate GUI
-gui = GUI()
-
-# Display Top Page
-gui.display_top_page(["Message 1", "Message 2", "Message 3"], ["User 1", "User 2", "User 3"])
-
-# Process User Application
-super_user.process_application(ordinary_user, 'accept')
+    def deactivate(self):
+        """
+        Deactivates the user account.
+        """
+        self.is_active = False
 
 
-# In[ ]:
+class CorporateUser(User):
+    """
+    A subclass to represent a corporate user in the system, inheriting from User.
+    """
+    def __init__(self, user_id, username, corporate_id):
+        super().__init__(user_id, username)
+        self.corporate_id = corporate_id
+        self.ads_posted = 0
 
+    def post_ad(self):
+        """
+        Allows the corporate user to post an ad and updates the balance.
+        """
+        self.ads_posted += 1
+        self.update_balance(-0.1)  # Cost for posting an ad
 
+    def apply_for_status(self):
+        """
+        Allows the corporate user to apply for a super-user status.
+        """
+        # Placeholder for the application process
+        return "Applied for super-user status."
 
+    def pay_fine(self):
+        """
+        Allows the corporate user to pay a fine to remove complaints.
+        """
+        if self.complaints > 0:
+            fine_amount = self.complaints * 1  # Assuming the fine is $1 per complaint
+            if self.balance >= fine_amount:
+                self.update_balance(-fine_amount)
+                self.complaints = 0
+                return "Fine paid successfully."
+            else:
+                return "Insufficient balance to pay the fine."
+        else:
+            return "No complaints to pay for."
 
+    def post_message(self, message_length):
+        """
+        Allows the corporate user to post a message with a certain length.
+        """
+        if message_length <= 20:
+            return "Message posted for free."
+        else:
+            cost = (message_length - 20) * 0.1
+            if self.balance >= cost:
+                self.update_balance(-cost)
+                return "Message posted with additional cost."
+            else:
+                return "Insufficient balance to post the message."
+
+    def warn(self):
+        """
+        Issues a warning to the corporate user.
+        """
+        self.warnings += 1
+        if self.check_warnings():
+            self.deactivate()
+            return "Account deactivated due to excessive warnings."
+        else:
+            return "Warning issued."
+
+# Example Usage
+corp_user = CorporateUser('123', 'CorpInc', 'C12345')
+print(corp_user.apply_for_status())
+print(corp_user.post_ad())
+print(corp_user.pay_fine())
+print(corp_user.post_message(25))
+print(corp_user.warn())
+print(corp_user.warn())
+print(corp_user.warn())  # This should deactivate the account
+print(corp_user.is_active)  # Should print False after three warnings
